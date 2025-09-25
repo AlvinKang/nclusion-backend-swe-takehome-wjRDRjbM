@@ -12,14 +12,19 @@ export class PlayerModel {
       throw new Error("Valid email address is required");
     }
     const normalizedEmail = email.toLowerCase().trim();
+    const normalizedName = name.trim();
+
     for (const existing of this.players.values()) {
       if (existing.email === normalizedEmail) {
         throw new Error("Email is already in use by another player");
       }
+      if (existing.name === normalizedName) {
+        throw new Error("Name is already in use by another player");
+      }
     }
     const player: Player = {
       id: uuidv4(),
-      name: name.trim(),
+      name: normalizedName,
       email: normalizedEmail,
       stats: this.createEmptyStats(),
       createdAt: new Date(),
@@ -41,6 +46,14 @@ export class PlayerModel {
     return null;
   }
 
+  async getPlayerByName(name: string): Promise<Player | null> {
+    const normalizedName = name.trim();
+    for (const player of this.players.values()) {
+      if (player.name === normalizedName) return player;
+    }
+    return null;
+  }
+
   async updatePlayer(
     playerId: string,
     updates: Partial<Pick<Player, "name" | "email">>,
@@ -58,7 +71,12 @@ export class PlayerModel {
       ) {
         throw new Error("Player name must be a non-empty string");
       }
-      player.name = updates.name.trim();
+      const normalizedName = updates.name.toLowerCase().trim();
+      const existingPlayer = await this.getPlayerByName(normalizedName);
+      if (existingPlayer && existingPlayer.id !== playerId) {
+        throw new Error("Name is already in use by another player");
+      }
+      player.name = normalizedName;
     }
     if (updates.email !== undefined) {
       if (
@@ -151,6 +169,3 @@ export class PlayerModel {
     return stats.totalMoves / stats.gamesWon;
   }
 }
-
-// TODO: Validate Player model (name/email uniqueness, format) [ttt.todo.model.player.validation]
-// TODO: Add player email validation [ttt.todo.validation.player-email]
