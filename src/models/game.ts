@@ -1,12 +1,4 @@
-import {
-  Game,
-  GameStatus,
-  GameBoard,
-  Move,
-  Player,
-  WinResult,
-  WinCondition,
-} from "../types";
+import { Game, GameStatus, GameBoard, Move, Player, WinResult } from "../types";
 import { v4 as uuidv4 } from "uuid";
 
 export class GameModel {
