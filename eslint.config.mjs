@@ -10,7 +10,10 @@ export default [
 
     languageOptions: {
       parser: tsparser,
-      sourceType: "module",
+      parserOptions: {
+        ecmaVersion: "latest",    // modern JS features
+        sourceType: "module"
+      }
     },
 
     plugins: {
@@ -21,11 +24,11 @@ export default [
     rules: {
       ...tseslint.configs.recommended.rules,
       ...prettierConfig.rules,
-      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
       "no-console": "warn",
       "semi": ["error", "always"],
       "quotes": ["error", "double"],
-      "prettier/prettier": "error",
-    },
-  },
+      "prettier/prettier": "error"
+    }
+  }
 ];
