@@ -9,6 +9,6 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "include": ["src"],             // <— only app code
-  "exclude": ["tests", "**/*.test.ts"]  // <— exclude tests from build
+  "include": ["src"], // <— only app code
+  "exclude": ["tests", "**/*.test.ts"] // <— exclude tests from build
 }

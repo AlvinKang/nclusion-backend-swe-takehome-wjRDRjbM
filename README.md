@@ -5,6 +5,7 @@
 This is a **3-4 hour take-home assignment**. You will build a small, network-accessible backend web service that manages a turn-based, grid-driven game from pre-defined rules. Your assignment is tailored: a randomized (but reproducible) set of TODOs, features, and bugs has been embedded inline.
 
 You should focus on:
+
 - Clear, maintainable API handlers and service logic
 - Robust input validation and error handling
 - Simple, reliable tests (unit and integration)
@@ -60,6 +61,7 @@ src/
 ### Selected Tasks
 
 #### TODOs
+
 - Validate Player model (name/email uniqueness, format)
 - Standardize service error handling and messages
 - Add request logging middleware
@@ -71,10 +73,12 @@ src/
 - Add unit tests for GameModel and PlayerModel
 
 #### Feature Requests
+
 - Implement basic leaderboard endpoint
 - Add basic rate limiting middleware
 
 #### Bugs To Fix
+
 - Fix off-by-one error in win detection (symptom: )
 
 ### Core Requirements (high-level)
@@ -86,6 +90,7 @@ src/
 5. A small simulation or test path that exercises the API
 
 Additionally, look for inline TODOs in language-appropriate files. Examples:
+
 - TypeScript: `src/routes/*`, `src/services/*`, `src/models/*`, `src/index.ts`
 
 > Focus on correctness, quality, and clarity. If you finish early, feel free to polish or extend.
@@ -101,11 +106,13 @@ Additionally, look for inline TODOs in language-appropriate files. Examples:
 Assuming your server is running on http://localhost:3000
 
 Create a game
+
 ```bash
 curl -s -X POST http://localhost:3000/games -H 'Content-Type: application/json' -d '{"name":"Sample"}' | jq .
 ```
 
 Join the game
+
 ```bash
 GAME_ID=<paste-from-create>
 curl -s -X POST http://localhost:3000/games/$GAME_ID/join -H 'Content-Type: application/json' -d '{"playerId":"player-1"}' | jq .
@@ -113,12 +120,14 @@ curl -s -X POST http://localhost:3000/games/$GAME_ID/join -H 'Content-Type: appl
 ```
 
 Make a move and get status
+
 ```bash
 curl -s -X POST http://localhost:3000/games/$GAME_ID/moves -H 'Content-Type: application/json' -d '{"playerId":"player-1","row":0,"col":0}' | jq .
 curl -s http://localhost:3000/games/$GAME_ID/status | jq .
 ```
 
 Leaderboard (optional)
+
 ```bash
 curl -s http://localhost:3000/leaderboard | jq .
 ```

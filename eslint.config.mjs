@@ -11,9 +11,9 @@ export default [
     languageOptions: {
       parser: tsparser,
       parserOptions: {
-        ecmaVersion: "latest",    // modern JS features
-        sourceType: "module"
-      }
+        ecmaVersion: "latest", // modern JS features
+        sourceType: "module",
+      },
     },
 
     plugins: {
@@ -24,11 +24,13 @@ export default [
     rules: {
       ...tseslint.configs.recommended.rules,
       ...prettierConfig.rules,
-      "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
-      "no-console": "warn",
-      "semi": ["error", "always"],
-      "quotes": ["error", "double"],
-      "prettier/prettier": "error"
-    }
-  }
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
+      semi: ["error", "always"],
+      quotes: ["error", "double"],
+      "prettier/prettier": "error",
+    },
+  },
 ];

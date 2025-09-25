@@ -1,20 +1,20 @@
-import { Player, PlayerStats } from '../types';
-import { v4 as uuidv4 } from 'uuid';
+import { Player, PlayerStats } from "../types";
+import { v4 as uuidv4 } from "uuid";
 
 export class PlayerModel {
   private players: Map<string, Player> = new Map();
 
   async createPlayer(name: string, email: string): Promise<Player> {
-    if (!name || typeof name !== 'string' || name.trim().length === 0) {
-      throw new Error('Player name must be a non-empty string');
+    if (!name || typeof name !== "string" || name.trim().length === 0) {
+      throw new Error("Player name must be a non-empty string");
     }
-    if (!email || typeof email !== 'string' || !this.isValidEmail(email)) {
-      throw new Error('Valid email address is required');
+    if (!email || typeof email !== "string" || !this.isValidEmail(email)) {
+      throw new Error("Valid email address is required");
     }
     const normalizedEmail = email.toLowerCase().trim();
     for (const existing of this.players.values()) {
       if (existing.email === normalizedEmail) {
-        throw new Error('Email is already in use by another player');
+        throw new Error("Email is already in use by another player");
       }
     }
     const player: Player = {
@@ -43,27 +43,35 @@ export class PlayerModel {
 
   async updatePlayer(
     playerId: string,
-    updates: Partial<Pick<Player, 'name' | 'email'>>
+    updates: Partial<Pick<Player, "name" | "email">>,
   ): Promise<Player> {
     if (!playerId || !updates) {
-      throw new Error('Player ID and updates are required');
+      throw new Error("Player ID and updates are required");
     }
     const player = await this.getPlayerById(playerId);
-    if (!player) throw new Error('Player not found');
+    if (!player) throw new Error("Player not found");
     if (updates.name !== undefined) {
-      if (!updates.name || typeof updates.name !== 'string' || updates.name.trim().length === 0) {
-        throw new Error('Player name must be a non-empty string');
+      if (
+        !updates.name ||
+        typeof updates.name !== "string" ||
+        updates.name.trim().length === 0
+      ) {
+        throw new Error("Player name must be a non-empty string");
       }
       player.name = updates.name.trim();
     }
     if (updates.email !== undefined) {
-      if (!updates.email || typeof updates.email !== 'string' || !this.isValidEmail(updates.email)) {
-        throw new Error('Valid email address is required');
+      if (
+        !updates.email ||
+        typeof updates.email !== "string" ||
+        !this.isValidEmail(updates.email)
+      ) {
+        throw new Error("Valid email address is required");
       }
       const normalizedEmail = updates.email.toLowerCase().trim();
       const existingPlayer = await this.getPlayerByEmail(normalizedEmail);
       if (existingPlayer && existingPlayer.id !== playerId) {
-        throw new Error('Email is already in use by another player');
+        throw new Error("Email is already in use by another player");
       }
       player.email = normalizedEmail;
     }
@@ -74,28 +82,33 @@ export class PlayerModel {
 
   async deletePlayer(playerId: string): Promise<void> {
     const player = await this.getPlayerById(playerId);
-    if (!player) throw new Error('Player not found');
+    if (!player) throw new Error("Player not found");
     this.players.delete(playerId);
   }
 
   async getAllPlayers(): Promise<Player[]> {
     return Array.from(this.players.values()).sort(
-      (a, b) => b.stats.gamesWon - a.stats.gamesWon || b.stats.efficiency - a.stats.efficiency
+      (a, b) =>
+        b.stats.gamesWon - a.stats.gamesWon ||
+        b.stats.efficiency - a.stats.efficiency,
     );
   }
 
   async getPlayerStats(playerId: string): Promise<PlayerStats> {
     const player = await this.getPlayerById(playerId);
-    if (!player) throw new Error('Player not found');
+    if (!player) throw new Error("Player not found");
     return player.stats;
   }
 
-  async searchPlayersByName(query: string, limit: number = 10): Promise<Player[]> {
-    if (!query || typeof query !== 'string') {
-      throw new Error('Search query must be a valid string');
+  async searchPlayersByName(
+    query: string,
+    limit: number = 10,
+  ): Promise<Player[]> {
+    if (!query || typeof query !== "string") {
+      throw new Error("Search query must be a valid string");
     }
     if (limit < 1 || limit > 100) {
-      throw new Error('Limit must be between 1 and 100');
+      throw new Error("Limit must be between 1 and 100");
     }
     const normalizedQuery = query.toLowerCase().trim();
     const players = Array.from(this.players.values())
@@ -138,8 +151,6 @@ export class PlayerModel {
     return stats.totalMoves / stats.gamesWon;
   }
 }
-
-
 
 // TODO: Validate Player model (name/email uniqueness, format) [ttt.todo.model.player.validation]
 // TODO: Add player email validation [ttt.todo.validation.player-email]
