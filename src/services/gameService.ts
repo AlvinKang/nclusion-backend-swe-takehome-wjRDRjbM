@@ -2,11 +2,7 @@ import { Game, GameStatus, GameBoard, Move, Player } from "../types";
 import { GameModel } from "../models/game";
 
 export class GameService {
-  private gameModel: GameModel;
-
-  constructor() {
-    this.gameModel = new GameModel();
-  }
+  constructor(private readonly gameModel: GameModel) {}
 
   async createGame(name?: string) {
     if (name && (typeof name !== "string" || name.trim().length < 3)) {

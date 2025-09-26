@@ -2,11 +2,7 @@ import { Player, PlayerStats } from "../types";
 import { PlayerModel } from "../models/player";
 
 export class PlayerService {
-  private playerModel: PlayerModel;
-
-  constructor() {
-    this.playerModel = new PlayerModel();
-  }
+  constructor(private readonly playerModel: PlayerModel) {}
 
   async createPlayer(name: string, email: string): Promise<Player> {
     console.log(`👤 Creating player: ${name}`);

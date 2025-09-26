@@ -2,8 +2,10 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
-// import { gameRoutes } from "./routes/games";
-// import { playerRoutes } from "./routes/players";
+
+import { gameService, playerService } from "./services";
+import { gamesRouter } from "./routes/games";
+import { playersRouter } from "./routes/players";
 // import { leaderboardRoutes } from "./routes/leaderboard";
 // import { errorHandler } from "./middleware/errorHandler";
 import { validationMiddleware } from "./middleware/validation";
@@ -36,8 +38,8 @@ app.get("/health", (req, res) => {
 });
 
 // API Routes
-// app.use("/games", gameRoutes);
-// app.use("/players", playerRoutes);
+app.use("/games", gamesRouter(gameService, playerService));
+app.use("/players", playersRouter(playerService));
 // app.use("/leaderboard", leaderboardRoutes);
 
 // API documentation endpoint (Swagger/OpenAPI)
