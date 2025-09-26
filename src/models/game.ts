@@ -28,12 +28,12 @@ export class GameModel {
   async joinGame(gameId: string, player: Player): Promise<Game> {
     const game = await this.getGameById(gameId);
     if (!game) throw new Error("Game not found");
-    if (game.status !== "waiting")
-      throw new Error("Game is not accepting new players");
-    if (game.players.length >= 2) throw new Error("Game is full");
     if (game.players.find((p) => p.id === player.id)) {
       throw new Error("Player already in the game");
     }
+    if (game.players.length >= 2) throw new Error("Game is full");
+    if (game.status !== "waiting")
+      throw new Error("Game is not accepting new players");
     game.players.push(player);
     if (game.players.length === 2) {
       game.status = "active";
@@ -52,15 +52,19 @@ export class GameModel {
   ): Promise<{ game: Game; move: Move }> {
     const game = await this.getGameById(gameId);
     if (!game) throw new Error("Game not found");
+
     if (game.status !== "active") throw new Error("Game is not active");
+
+    const player = game.players.find((p) => p.id === playerId);
+    if (!player) throw new Error("Player not found in game");
+
     if (game.currentPlayerId !== playerId) throw new Error("Not your turn");
+
     if (row < 0 || row > 2 || col < 0 || col > 2) {
       throw new Error("Move coordinates must be between 0 and 2");
     }
     if (game.board[row][col] !== null)
       throw new Error("Cell is already occupied");
-    const player = game.players.find((p) => p.id === playerId);
-    if (!player) throw new Error("Player not found in game");
 
     game.board[row][col] = playerId;
     game.updatedAt = new Date();
