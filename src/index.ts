@@ -2,10 +2,10 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
-import { gameRoutes } from "./routes/games";
-import { playerRoutes } from "./routes/players";
-import { leaderboardRoutes } from "./routes/leaderboard";
-import { errorHandler } from "./middleware/errorHandler";
+// import { gameRoutes } from "./routes/games";
+// import { playerRoutes } from "./routes/players";
+// import { leaderboardRoutes } from "./routes/leaderboard";
+// import { errorHandler } from "./middleware/errorHandler";
 import { validationMiddleware } from "./middleware/validation";
 
 // Load environment variables
@@ -36,19 +36,19 @@ app.get("/health", (req, res) => {
 });
 
 // API Routes
-app.use("/games", gameRoutes);
-app.use("/players", playerRoutes);
-app.use("/leaderboard", leaderboardRoutes);
+// app.use("/games", gameRoutes);
+// app.use("/players", playerRoutes);
+// app.use("/leaderboard", leaderboardRoutes);
 
 // API documentation endpoint (Swagger/OpenAPI)
 
 // Metrics endpoint
 
 // Error handling middleware (must be last)
-app.use(errorHandler);
+// app.use(errorHandler);
 
 // 404 handler
-app.use("*", (req, res) => {
+app.use("/*splat", (req, res) => {
   res.status(404).json({ error: "Endpoint not found" });
 });
 
