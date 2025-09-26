@@ -1,12 +1,8 @@
-import { Player, PlayerStats } from '../types';
-import { PlayerModel } from '../models/player';
+import { Player, PlayerStats } from "../types";
+import { PlayerModel } from "../models/player";
 
 export class PlayerService {
-  private playerModel: PlayerModel;
-
-  constructor() {
-    this.playerModel = new PlayerModel();
-  }
+  constructor(private readonly playerModel: PlayerModel) {}
 
   async createPlayer(name: string, email: string): Promise<Player> {
     console.log(`👤 Creating player: ${name}`);
@@ -16,8 +12,8 @@ export class PlayerService {
   }
 
   async getPlayerById(playerId: string): Promise<Player | null> {
-    if (!playerId || typeof playerId !== 'string') {
-      throw new Error('Player ID must be a valid string');
+    if (!playerId || typeof playerId !== "string") {
+      throw new Error("Player ID must be a valid string");
     }
     console.log(`🔍 Fetching player: ${playerId}`);
     return this.playerModel.getPlayerById(playerId);
@@ -25,7 +21,7 @@ export class PlayerService {
 
   async updatePlayer(
     playerId: string,
-    updates: Partial<Pick<Player, 'name' | 'email'>>
+    updates: Partial<Pick<Player, "name" | "email">>,
   ): Promise<Player> {
     console.log(`✏️  Updating player: ${playerId}`);
     const player = await this.playerModel.updatePlayer(playerId, updates);
@@ -52,12 +48,13 @@ export class PlayerService {
     return stats;
   }
 
-  async searchPlayersByName(query: string, limit: number = 10): Promise<Player[]> {
+  async searchPlayersByName(
+    query: string,
+    limit: number = 10,
+  ): Promise<Player[]> {
     console.log(`🔎 Searching players by name: '${query}' (limit ${limit})`);
     return this.playerModel.searchPlayersByName(query, limit);
   }
 }
-
-
 
 // TODO: Implement PlayerService (create/get/update/delete/search/stats) [ttt.todo.service.player.complete]

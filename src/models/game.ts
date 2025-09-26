@@ -1,14 +1,14 @@
-import { Game, GameStatus, GameBoard, Move, Player, WinResult, WinCondition } from '../types';
-import { v4 as uuidv4 } from 'uuid';
+import { Game, GameStatus, GameBoard, Move, Player, WinResult } from "../types";
+import { randomUUID } from "crypto";
 
 export class GameModel {
   private games: Map<string, Game> = new Map();
 
   async createGame(name?: string): Promise<Game> {
     const game: Game = {
-      id: uuidv4(),
+      id: randomUUID(),
       name: name || `Game-${Date.now()}`,
-      status: 'waiting',
+      status: "waiting",
       board: this.createEmptyBoard(),
       players: [],
       currentPlayerId: null,
@@ -27,15 +27,16 @@ export class GameModel {
 
   async joinGame(gameId: string, player: Player): Promise<Game> {
     const game = await this.getGameById(gameId);
-    if (!game) throw new Error('Game not found');
-    if (game.status !== 'waiting') throw new Error('Game is not accepting new players');
-    if (game.players.length >= 2) throw new Error('Game is full');
+    if (!game) throw new Error("Game not found");
     if (game.players.find((p) => p.id === player.id)) {
-      throw new Error('Player already in the game');
+      throw new Error("Player already in the game");
     }
+    if (game.players.length >= 2) throw new Error("Game is full");
+    if (game.status !== "waiting")
+      throw new Error("Game is not accepting new players");
     game.players.push(player);
     if (game.players.length === 2) {
-      game.status = 'active';
+      game.status = "active";
       game.currentPlayerId = game.players[0].id;
     }
     game.updatedAt = new Date();
@@ -47,24 +48,29 @@ export class GameModel {
     gameId: string,
     playerId: string,
     row: number,
-    col: number
+    col: number,
   ): Promise<{ game: Game; move: Move }> {
     const game = await this.getGameById(gameId);
-    if (!game) throw new Error('Game not found');
-    if (game.status !== 'active') throw new Error('Game is not active');
-    if (game.currentPlayerId !== playerId) throw new Error('Not your turn');
-    if (row < 0 || row > 2 || col < 0 || col > 2) {
-      throw new Error('Move coordinates must be between 0 and 2');
-    }
-    if (game.board[row][col] !== null) throw new Error('Cell is already occupied');
+    if (!game) throw new Error("Game not found");
+
+    if (game.status !== "active") throw new Error("Game is not active");
+
     const player = game.players.find((p) => p.id === playerId);
-    if (!player) throw new Error('Player not found in game');
+    if (!player) throw new Error("Player not found in game");
+
+    if (game.currentPlayerId !== playerId) throw new Error("Not your turn");
+
+    if (row < 0 || row > 2 || col < 0 || col > 2) {
+      throw new Error("Move coordinates must be between 0 and 2");
+    }
+    if (game.board[row][col] !== null)
+      throw new Error("Cell is already occupied");
 
     game.board[row][col] = playerId;
     game.updatedAt = new Date();
 
     const move: Move = {
-      id: uuidv4(),
+      id: randomUUID(),
       gameId,
       playerId,
       row,
@@ -75,12 +81,14 @@ export class GameModel {
 
     const winResult = this.checkWinCondition(game.board, playerId);
     if (winResult.won) {
-      game.status = 'completed';
+      game.status = "completed";
       game.winnerId = playerId;
     } else if (this.isDraw(game.board)) {
-      game.status = 'draw';
+      game.status = "draw";
     } else {
-      const currentPlayerIndex = game.players.findIndex((p) => p.id === playerId);
+      const currentPlayerIndex = game.players.findIndex(
+        (p) => p.id === playerId,
+      );
       const nextPlayerIndex = (currentPlayerIndex + 1) % game.players.length;
       game.currentPlayerId = game.players[nextPlayerIndex].id;
     }
@@ -99,7 +107,7 @@ export class GameModel {
     moves: Move[];
   }> {
     const game = await this.getGameById(gameId);
-    if (!game) throw new Error('Game not found');
+    if (!game) throw new Error("Game not found");
     return {
       id: game.id,
       status: game.status,
@@ -121,7 +129,7 @@ export class GameModel {
 
   async deleteGame(gameId: string): Promise<void> {
     const game = await this.getGameById(gameId);
-    if (!game) throw new Error('Game not found');
+    if (!game) throw new Error("Game not found");
     this.games.delete(gameId);
   }
 
@@ -133,25 +141,42 @@ export class GameModel {
     ];
   }
 
+  // Checks 8 different win conditions: 3 rows, 3 cols, 2 diagonals
   private checkWinCondition(board: GameBoard, playerId: string): WinResult {
     // Check horizontal lines
     for (let r = 0; r < 3; r++) {
-      if (board[r][0] === playerId && board[r][1] === playerId && board[r][2] === playerId) {
-        return { won: true, condition: 'line', position: r };
+      if (
+        board[r][0] === playerId &&
+        board[r][1] === playerId &&
+        board[r][2] === playerId
+      ) {
+        return { won: true, condition: "line", position: r };
       }
     }
     // Check vertical lines
     for (let c = 0; c < 3; c++) {
-      if (board[0][c] === playerId && board[1][c] === playerId && board[2][c] === playerId) {
-        return { won: true, condition: 'line', position: c };
+      if (
+        board[0][c] === playerId &&
+        board[1][c] === playerId &&
+        board[2][c] === playerId
+      ) {
+        return { won: true, condition: "line", position: c };
       }
     }
     // Check diagonals
-    if (board[0][0] === playerId && board[1][1] === playerId && board[2][2] === playerId) {
-      return { won: true, condition: 'line', position: 0 };
+    if (
+      board[0][0] === playerId &&
+      board[1][1] === playerId &&
+      board[2][2] === playerId
+    ) {
+      return { won: true, condition: "line", position: 0 };
     }
-    if (board[0][2] === playerId && board[1][1] === playerId && board[2][0] === playerId) {
-      return { won: true, condition: 'line', position: 1 };
+    if (
+      board[0][2] === playerId &&
+      board[1][1] === playerId &&
+      board[2][0] === playerId
+    ) {
+      return { won: true, condition: "line", position: 1 };
     }
     return { won: false };
   }
@@ -181,14 +206,12 @@ export class GameModel {
     averageMoveTime: number;
   }> {
     const game = await this.getGameById(gameId);
-    if (!game) throw new Error('Game not found');
+    if (!game) throw new Error("Game not found");
     const totalMoves = game.moves.length;
     const duration = game.updatedAt.getTime() - game.createdAt.getTime();
     const averageMoveTime = totalMoves > 0 ? duration / totalMoves : 0;
     return { totalMoves, duration, averageMoveTime };
   }
 }
-
-
 
 // TODO: Fix off-by-one error in win detection [ttt.bug.game.off-by-one]

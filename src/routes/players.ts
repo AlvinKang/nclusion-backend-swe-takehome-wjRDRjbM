@@ -1,0 +1,30 @@
+import { Router, Request, Response } from "express";
+import { PlayerService } from "../services/playerService";
+
+import { isAppError, AppError } from "../errors";
+
+export function playersRouter(playerService: PlayerService) {
+  const router = Router();
+
+  // Create a new player
+  router.post("/", async (req: Request, res: Response) => {
+    try {
+      const { name, email } = req.body;
+      const player = await playerService.createPlayer(name, email);
+      res.status(201).json({ player, message: "Player created successfully" });
+    } catch (error) {
+      console.error("Error creating player:", error);
+      if (isAppError(error)) {
+        return res
+          .status((error as AppError).status)
+          .json({ error: error.name, message: error.message });
+      }
+      res.status(500).json({
+        error: "Internal server error",
+        message: "Failed to create game",
+      });
+    }
+  });
+
+  return router;
+}
