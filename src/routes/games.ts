@@ -2,7 +2,12 @@ import { Router, Request, Response } from "express";
 import { GameService } from "../services/gameService";
 import { PlayerModel } from "../models/player";
 import { validationMiddleware } from "../middleware/validation";
-import { CreateGameRequest, JoinGameRequest, MakeMoveRequest } from "../types";
+import {
+  CreateGameRequest,
+  JoinGameRequest,
+  MakeMoveRequest,
+  GameStatus,
+} from "../types";
 
 const router = Router();
 const gameService = new GameService();
@@ -230,7 +235,7 @@ router.get("/", async (req: Request, res: Response) => {
     const { status } = req.query;
     let games;
     if (status && typeof status === "string") {
-      games = await gameService.getGamesByStatus(status);
+      games = await gameService.getGamesByStatus(status as GameStatus);
     } else {
       games = await gameService.getAllGames();
     }
