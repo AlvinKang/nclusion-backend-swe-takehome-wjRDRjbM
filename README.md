@@ -184,3 +184,4 @@ For this take-home assignment, I utilized ChatGPT for the following:
 - For guidance on separating models, services, routers:
   - When I was testing the APIs using Postman, I ran into an issue where the game was not found, even though I just created it. I realized that as is, the existing code in the services were instantiating a new instance of the corresponding model (`GameService` had a different instance of `PlayerModel` while `PlayerService` had its own).
   - I set up the routes so they don’t create their own services, but instead receive the services from the app’s entry point (`index.ts`). That separation makes the routes simple to test with mocks, and it also means if I swap out the underlying model later—like moving from in-memory storage to a database—I only need to update the wiring in one place.
+- To debug error with router integration test hanging. The solution involved splitting up the Express app from the server listening code.
