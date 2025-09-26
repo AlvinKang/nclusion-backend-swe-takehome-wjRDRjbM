@@ -1,4 +1,4 @@
-import { PlayerModel } from "../../../../src/models/player";
+import { PlayerModel } from "../../../src/models/player";
 
 describe("PlayerModel", () => {
   it("creates a player", async () => {

@@ -1,4 +1,4 @@
-import { GameModel } from "../../../../src/models/game";
+import { GameModel } from "../../../src/models/game";
 
 describe("GameModel", () => {
   it("creates a game", async () => {

@@ -1,5 +1,5 @@
-import { GameModel } from "../../../../src/models/game";
-import { Player } from "../../../../src/types";
+import { GameModel } from "../../../src/models/game";
+import { Player } from "../../../src/types";
 
 describe("GameModel win/draw logic", () => {
   it("detects a horizontal alignment win", async () => {
