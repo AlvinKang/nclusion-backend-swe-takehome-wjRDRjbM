@@ -98,8 +98,8 @@ curl -s -X POST http://localhost:3000/games/<GAME_ID_FROM_CREATE_GAME>/moves \
 
 ```text
 src/
+├── app.ts
 ├── errors.ts
-├── index.ts
 ├── middleware/
 │   └── validation.ts
 ├── models/
@@ -110,6 +110,7 @@ src/
 │   ├── games.ts
 │   ├── leaderboard.ts
 │   └── players.ts
+├── server.ts
 ├── services/
 │   ├── gameService.ts
 │   ├── index.ts
