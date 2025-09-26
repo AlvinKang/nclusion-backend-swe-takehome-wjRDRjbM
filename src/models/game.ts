@@ -1,12 +1,12 @@
 import { Game, GameStatus, GameBoard, Move, Player, WinResult } from "../types";
-import { v4 as uuidv4 } from "uuid";
+import { randomUUID } from "crypto";
 
 export class GameModel {
   private games: Map<string, Game> = new Map();
 
   async createGame(name?: string): Promise<Game> {
     const game: Game = {
-      id: uuidv4(),
+      id: randomUUID(),
       name: name || `Game-${Date.now()}`,
       status: "waiting",
       board: this.createEmptyBoard(),
@@ -66,7 +66,7 @@ export class GameModel {
     game.updatedAt = new Date();
 
     const move: Move = {
-      id: uuidv4(),
+      id: randomUUID(),
       gameId,
       playerId,
       row,
@@ -137,6 +137,7 @@ export class GameModel {
     ];
   }
 
+  // Checks 8 different win conditions: 3 rows, 3 cols, 2 diagonals
   private checkWinCondition(board: GameBoard, playerId: string): WinResult {
     // Check horizontal lines
     for (let r = 0; r < 3; r++) {

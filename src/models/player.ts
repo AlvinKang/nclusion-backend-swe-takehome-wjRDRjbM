@@ -1,5 +1,5 @@
 import { Player, PlayerStats } from "../types";
-import { v4 as uuidv4 } from "uuid";
+import { randomUUID } from "crypto";
 
 export class PlayerModel {
   private players: Map<string, Player> = new Map();
@@ -23,7 +23,7 @@ export class PlayerModel {
       }
     }
     const player: Player = {
-      id: uuidv4(),
+      id: randomUUID(),
       name: normalizedName,
       email: normalizedEmail,
       stats: this.createEmptyStats(),
