@@ -50,3 +50,17 @@ export type WinResult = {
   condition?: string;
   position?: number;
 };
+
+export type CreateGameRequest = {
+  name: string;
+};
+
+export type JoinGameRequest = {
+  playerId: string;
+};
+
+export type MakeMoveRequest = {
+  playerId: string;
+  row: number;
+  col: number;
+};

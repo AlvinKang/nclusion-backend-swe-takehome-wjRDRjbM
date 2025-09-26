@@ -230,7 +230,7 @@ router.get("/", async (req: Request, res: Response) => {
     const { status } = req.query;
     let games;
     if (status && typeof status === "string") {
-      games = await gameService.getGamesByStatus(status as any);
+      games = await gameService.getGamesByStatus(status);
     } else {
       games = await gameService.getAllGames();
     }
