@@ -7,8 +7,9 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "tsc",
     "dev": "ts-node-dev src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
     "test": "jest --passWithNoTests",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
